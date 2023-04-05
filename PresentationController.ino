@@ -20,13 +20,6 @@ int goOut = 0 ;
 int  initialDistanceIn = 60 ;
 int  initialDistanceOut = 60 ;
 
-void displayText(String txt) {
-  //display.clear();
-  //display.setCursor(5,0);
-  //display.print("Welcome");
-  //display.setCursor(0,1);
-  //display.print("Visitors: "+txt);
-}
 
 int distanceIn, distanceOut ;
 
@@ -45,19 +38,7 @@ void setup() {
   pinMode(echoPin1, INPUT);
   pinMode(trigPin2, OUTPUT);
   pinMode(echoPin2, INPUT);
-  //  initialDistanceIn = measureDistance(trigPin1, echoPin1);
-  //  initialDistanceOut = measureDistance(trigPin2, echoPin2);
-  //myservo.attach(5);
-  //myservo.write(100);
-  //myservo.write(0);
-  //display.begin();
-  //display.backlight();
-  //display.setCursor (6,0);
-  //display.print("SOHAM");
-  //display.setCursor (0,1);
-  //display.print(" Visitors Counter ");
   delay (1500);
-  //display.clear();
 }
 
 void loop() {
