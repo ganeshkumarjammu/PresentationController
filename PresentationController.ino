@@ -3,20 +3,17 @@
 #include <Keyboard.h>
 #include <KeyboardLayout.h>
 
-//#include <Servo.h>
-//Servo myservo ;
-
 int trigPin1 = 5;
 int echoPin1 = 6;
 
 int trigPin2 = 7;
 int echoPin2 = 8;
 
-int currentPeople = 0;
-int maxPeople = 5;
-int prevCount = -1 ;
-int comeIn = 0 ;
-int goOut = 0 ;
+int  count = 0;
+int  maxPeople = 5;
+int  prevCount = -1 ;
+int  comeIn = 0 ;
+int  goOut = 0 ;
 int  initialDistanceIn = 60 ;
 int  initialDistanceOut = 60 ;
 
@@ -28,6 +25,7 @@ int measureDistance(int trigPin, int echoPin) {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   int duration = pulseIn (echoPin, HIGH);
+  delay(50);
   return (duration / 2) / 29.1;
 }
 
@@ -45,65 +43,49 @@ void loop() {
   delay(200);
   distanceIn = measureDistance(trigPin1, echoPin1);
   distanceOut = measureDistance(trigPin2, echoPin2);
-  Serial.println("distanceIn: ");
+  Serial.print("distanceIn: ");
   Serial.println(distanceIn);
   Serial.print("distanceOut: ");
   Serial.println(distanceOut);
-  Serial.println("goOut: && comeIn:  ");
-  Serial.println(goOut);
-  Serial.println(comeIn);
-  if (distanceIn < initialDistanceIn) {
-    if (!(goOut || comeIn)) {
-      comeIn = 1;
-      delay(10);
-    }
-    else if (goOut) {
-      currentPeople-- ;
-      goOut = 0 ;
-      Keyboard.write(0xD9);
-      Serial.println("Previous Slide");
-      delay(500);
-    }
-    else {
-      Serial.print("Blocking In Sensor,Soham");
-    }
-  }
-  if (distanceOut < initialDistanceOut) {
-    if (!(comeIn )) {
-      goOut = 1;
+
+  if (distanceIn < initialDistanceIn ) {
+    Serial.print("USS1: movement detected ");
+    while (distanceOut > initialDistanceOut) {
       delay(50);
+      distanceOut = measureDistance(trigPin2, echoPin2);
+      Serial.println("USS2: waiting ");
     }
-    else if (comeIn) {
-      currentPeople++ ;
-      comeIn = 0 ;
-      Keyboard.write(0xDA);
-      Serial.println("Next Slide");
-      delay(500);
+    count++;
+    Keyboard.write(0xD9);
+    Serial.println("Next Slide");
+    Serial.print("Count: ");
+    Serial.print(count);
+    delay(500);
+  }
+  else if (distanceOut < initialDistanceOut ) {
+    Serial.print("USS2: movement detected ");
+    while (distanceIn > initialDistanceIn) {
+      distanceIn = measureDistance(trigPin1, echoPin1);
+      delay(50);
+      Serial.println("USS1: waiting");
     }
-    else {
-      Serial.print("Blocking Out Sensor,Soham");
-    }
+    count-- ;
+    Keyboard.write(0xDA);
+    Serial.print("Previous Slide");
+    Serial.print("Count: ");
+    Serial.print(count);
+    delay(500);
   }
-  Serial.println("People :");
-  Serial.println(currentPeople);
-  if ((currentPeople != prevCount) && (currentPeople >= 0 ) ) {
-    prevCount = currentPeople ;
-    Serial.print("Count:");
-    Serial.println(currentPeople);
+  else {
+    Serial.println("Hello Soham");
   }
-  else if (currentPeople < 0) {
-    currentPeople = 0 ;
-  }
+  Serial.print("Count: ");
+  Serial.println(count);
 }
 
 
+
 /**
-
-
-
-
-
-
 
   // Modifiers
   #define KEY_LEFT_CTRL     0x80
