@@ -1,10 +1,9 @@
-
 #include <Mouse.h>
 #include <Keyboard.h>
 #include <KeyboardLayout.h>
 
-int trigPin1 = 5;
-int echoPin1 = 6;
+int trigPin1 = 2;
+int echoPin1 = 3;
 
 int trigPin2 = 7;
 int echoPin2 = 8;
@@ -21,6 +20,9 @@ int  initialDistanceOut = 60 ;
 int distanceIn, distanceOut ;
 
 int measureDistance(int trigPin, int echoPin) {
+
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
@@ -30,7 +32,7 @@ int measureDistance(int trigPin, int echoPin) {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Keyboard.begin();
   pinMode(trigPin1, OUTPUT);
   pinMode(echoPin1, INPUT);
@@ -51,7 +53,6 @@ void loop() {
   if (distanceIn < initialDistanceIn ) {
     Serial.print("USS1: movement detected ");
     while (distanceOut > initialDistanceOut) {
-      delay(50);
       distanceOut = measureDistance(trigPin2, echoPin2);
       Serial.println("USS2: waiting ");
     }
@@ -66,7 +67,6 @@ void loop() {
     Serial.print("USS2: movement detected ");
     while (distanceIn > initialDistanceIn) {
       distanceIn = measureDistance(trigPin1, echoPin1);
-      delay(50);
       Serial.println("USS1: waiting");
     }
     count-- ;
